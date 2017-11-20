@@ -8,6 +8,9 @@ let Client = require('./index.js');
 
 let log;
 
+/**
+ * @module tb-payments/routes
+ */
 function setupRoutes(App){
 
   log = App.log.child({module:'payRoute'});
@@ -21,6 +24,19 @@ function setupRoutes(App){
     next();
   });
 
+
+  /** 
+   * Registra una tarjeta de credito
+   *
+   * @name  Registro de tarjeta de crédito
+   * 
+   * @route {POST} srv/payments/register
+   *
+   * @queryparam {String} [service] Servicio en el que registrar la tarjeta. (Ej. "service=globalonepay")
+   *
+   * @bodyparam  {Object} data Información del pago que se va a realizar. La información dependerá del servicio a utilizar.
+   *
+   */
   router.post("/register",function(req, res, next){
     var ctx = req._ctx;
     let service = ctx.resource;
@@ -36,6 +52,46 @@ function setupRoutes(App){
 
   });
 
+  //  /** 
+  //  * Desregistra una tarjeta de credito. 
+  //  *
+  //  * @name  Desregistro de tarjeta de crédito
+  //  * 
+  //  * @route {POST} srv/payments/unregister
+  //  *
+  //  * @queryparam {String} [service] Servicio en el que desregistrar la tarjeta. (Ej. "service=globalonepay")
+  //  *
+  //  * @bodyparam  {Object} data Información del pago que se va a realizar. La información dependerá del servicio a utilizar.
+  //  *
+  //  */
+  // router.post("/unregister",function(req, res, next){
+  //   var ctx = req._ctx;
+  //   let service = ctx.resource;
+  //   let payload = ctx.payload;
+  //   ctx.model = "payments";
+  //   ctx.method = 'unregister';
+
+  //   console.log("entra en payments.unregister route")
+  //   Client.forService(service)
+  //     .then(client => client.unregister(payload.data))
+  //     .then(resp => res.status(200).json(resp))
+  //     .catch(err => next(err));
+
+  // });
+
+   /** 
+   * Realiza un pago
+   *
+   * @name  Pago
+   * 
+   * @route {POST} srv/payments/pay
+   *
+   * @queryparam {String} [service] Servicio por el que realizar el pago. (Ej. "service=globalonepay")
+   *
+   * @bodyparam  {Object} data Información del pago que se va a realizar. La información dependerá del servicio a utilizar.
+   * @bodyparam  {Object} [options] Opciones extras relacionadas con el pago. La información dependerá del servicio a utilizar.
+   *
+   */
   router.post("/pay",function(req, res, next){
     var ctx = req._ctx;
     let service = ctx.resource;
@@ -52,6 +108,19 @@ function setupRoutes(App){
       .catch(next);
   });
 
+   /** 
+   * Realiza un pago con una tarjeta de crédito previamente registrada
+   *
+   * @name  Pago con tarjeta registrada
+   * 
+   * @route {POST} srv/payments/payRegistered
+   *
+   * @queryparam {String} [service] Servicio por el que realizar el pago. (Ej. "service=globalonepay")
+   *
+   * @bodyparam  {Object} data Información del pago que se va a realizar. La información dependerá del servicio a utilizar.
+   * @bodyparam  {Object} [options] Opciones extras relacionadas con el pago. La información dependerá del servicio a utilizar.
+   *
+   */
   router.post("/payRegistered",function(req, res, next){
     var ctx = req._ctx;
     let service = ctx.resource;
@@ -65,6 +134,19 @@ function setupRoutes(App){
       .catch(next);
   });
 
+   /** 
+   * Realiza una devolución
+   *
+   * @name  Devolución
+   * 
+   * @route {POST} srv/payments/refund
+   *
+   * @queryparam {String} [service] Servicio por el que realizar la devolucion. (Ej. "service=globalonepay")
+   *
+   * @bodyparam  {Object} data Información de la devolución que se va a realizar. La información dependerá del servicio a utilizar.
+   * @bodyparam  {Object} [options] Opciones extras relacionadas con la devolución. La información dependerá del servicio a utilizar.
+   *
+   */
   router.post("/refund",function(req, res, next){
     var ctx = req._ctx;
     let service = ctx.resource;
@@ -78,21 +160,6 @@ function setupRoutes(App){
       .catch(next);
 
   }); 
-
-  // router.post("/test",function(req, res, next){
-  //   var ctx = req._ctx;
-  //   let service = ctx.resource;
-  //   let payload = ctx.payload;
-  //   ctx.model = "pay";
-  //   ctx.method = 'register';
-
-  //   Client.forService(service)
-  //     // .then(client => client.register(payload.data))
-  //     .then(resp => res.status(200).json({resp: "ok"}))
-  //     .catch(next);
-
-  //   next();
-  // });
 
   App.app.use(`${App.baseRoute}/srv/payments`, router);
 }

@@ -1,15 +1,58 @@
+/** 
+ * @module tb-payments
+ *
+ * @description 
+ *
+ * Este módulo permite realizar pagos, registro de tarjetas de crédito y devoluciones.
+ *
+ * <p>
+ * Servicios disponibles:
+ * </p>
+ * <p>
+ * {@link module:tb-payments-globalonepay|GlobalOnePay}
+ * </p>
+ *
+ * 
+ * <p>
+ * @see [Guía de uso]{@tutorial tb-payments} para más información.
+ * @see [REST API]{@link module:tb-payments/routes} (API externo).
+ * @see [Class API]{@link module:tb-payments.Client} (API interno).
+ * @see Repositorio en {@link https://github.com/toroback/tb-payments|GitHub}.
+ * </p>
+ *
+ * 
+
+ * 
+ */
+
+
 
 let rscPath  = __dirname +'/resources';
 
 let App;
 let log;
 
+
+/**
+ * Clase que representa un gestor de pagos
+ * @memberOf module:tb-payments
+ */
 class Client {
+  /**
+   * Crea un gestor de pagos. Utilizar los modulos tb-payments-globalonepay, etc…
+   * @param  {Object} options               Objeto con las credenciales para el servicio.
+   * @param  {Object} Adapter        Adapter del servicio que se va a utilizar. 
+   */
   constructor(options, Adapter) {
     this.options = options || {};
     this.adapter = new Adapter(this);
   }
   
+  /**
+   * Registra una tarjeta de credito
+   * @param  {Object} data Información de la tarjeta a registrar. La información dependerá del servicio a utilizar.
+   * @return {Promise<PaymentRegisterSchema>} Promesa con la información del registro
+   */
   register(data) {
     return new Promise((resolve, reject) =>{
       console.log("entra en payments.register index")
@@ -25,6 +68,35 @@ class Client {
     });
   }
 
+  // /**
+  //  * Desregistra una tarjeta de credito. 
+  //  * @param  {Object} data Información de la tarjeta a desregistrar. La información dependerá del servicio a utilizar.
+  //  * @return {Promise<PaymentRegisterSchema>} Promesa que indica si se desregistró correctamente
+  //  */
+  // unregister(data) {
+  //   return new Promise((resolve, reject) =>{
+  //     console.log("entra en payments.register index")
+  //     this.adapter.unregister(data)
+  //       .then(unregistrationData => {
+  //         console.log("vuelve a payments.register index")
+  //         //TODO: No devolver solo true. Habrá que modificar la base de datos cambiando el estado de la tarjeta
+        
+  //         // let PaymentsRegister = App.db.model('tb.payments-register');
+  //         // let registration = new PaymentsRegister(registrationData);
+  //         // return registration.save();
+  //         resolve({ok: true});
+  //       })
+  //       // .then(resolve)
+  //       .catch(reject);
+  //   });
+  // }
+
+  /**
+   * Realiza un pago
+   * @param  {Object} data Información del pago que se va a realizar. La información dependerá del servicio a utilizar.
+   * @param  {Object} [options] Opciones extras relacionadas con el pago. La información dependerá del servicio a utilizar.
+   * @return {Promise<TransactionSchema>} Promesa con la información de la transacción
+   */
   pay(data, options){
     return new Promise((resolve, reject) =>{
       console.log("entra en payments.pay index")
@@ -41,6 +113,12 @@ class Client {
     
   }
   
+  /**
+   * Realiza un pago con una tarjeta de crédito previamente registrada
+   * @param  {Object} data Información del pago que se va a realizar. La información dependerá del servicio a utilizar.
+   * @param  {Object} [options] Opciones extras relacionadas con el pago. La información dependerá del servicio a utilizar.
+   * @return {Promise<TransactionSchema>} Promesa con la información de la transacción
+   */
   payRegistered(data, options){
     return new Promise((resolve, reject) =>{
       console.log("entra en payments.payRegistered index")
@@ -56,6 +134,12 @@ class Client {
     });
   }
 
+  /**
+   * Realiza una devolución
+   * @param  {Object} data Información de la devolución que se va a realizar. La información dependerá del servicio a utilizar.
+   * @param  {Object} [options] Opciones extras relacionadas con la devolución. La información dependerá del servicio a utilizar.
+   * @return {Promise<TransactionSchema>} Promesa con la información de la transacción
+   */
   refund(data, options){
     return new Promise((resolve, reject) =>{
       console.log("entra en payments.refund index")
@@ -72,6 +156,11 @@ class Client {
   }
 
 
+  /**
+   * Setup del módulo. Debe ser llamado antes de crear una instancia
+   * @param {Object} _app Objeto App del servidor
+   * @return {Promise} Una promesa
+   */
   static setup(app){
     return new Promise((resolve,reject)=>{
       App = app;
@@ -86,7 +175,10 @@ class Client {
     });
   }
 
-
+  /**
+   * Inicializa los modelos del módulo
+   * @return {Promise} Una promesa
+   */
   static  init(){
     return new Promise( (resolve, reject) => {
       App.db.setModel('tb.payments-transaction',rscPath + '/tb.payments-transaction');
@@ -95,6 +187,11 @@ class Client {
     });
   }
 
+  /**
+   * Obtiene un gestor de pagos ya configurado para un servicio indicado tomando la configuración del archivo de configuración del servidor(config.json).
+   * @param  {String} service      El servicio para el que se quiere crear el gestor
+   * @return {Promise<Object>} Una promesa con el gestor
+   */
   static forService(service){
     return new Promise((resolve, reject) => {
 

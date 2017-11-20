@@ -1,113 +1,124 @@
-“# tb-pay”
+# **tb-payments**
 
-#### - **Instalación:**
+Módulo que ofrece servicios de pago, registro de tarjetas de crédito, devoluciones, etc…. Para ello utiliza servicios de terceros ofrecidos a través de distintos módulos. 
+
+## **Instalación:**
   
-  Para utilizar los servicios de pago es necesario tener instalada la librería "tb-payments" y la libreria del servicio que se vaya a utilizar, como por ejemplo "tb-payments-globalonepay".
+Para utilizar los servicios de pago es necesario tener instalada la librería **tb-payments** y la libreria del servicio que se vaya a utilizar, como por ejemplo **tb-payments-globalonepay**.
 
-  Además es importante inicializar la librería en el archivo "boot.js" dentro de app. Para ello incluir la siguiente linea dentro de la funcion Boot:
+Además es importante inicializar la librería en el archivo "boot.js" dentro de app. Para ello incluir la siguiente linea dentro de la funcion Boot:
 
-  ```
-  App.payments.init();
-  ``
+```javscript
+App.payments.init();
+```
 
+## **Configuración del servicio:**
 
-#### - **Configuración del servicio:**
+### **- Servicios disponibles:**
+Para poder utilizar un servicio se utilizarán los identificadores de cada uno de ellos.
+Por ahora los servicios disponibles son:
 
-  + **Configuración desde A2Server:** 
+- **GlobalOnePay**
+  + Nombre de módulo: [**tb-payments-globalonepay**](https://github.com/toroback/tb-payments-globalonepay)
+  + Identificador: "globalonepay"
 
-    NO DISPONIBLE
+### **- Configuración a través de interfaz de administración A2Server:** 
 
-  + **Configuración manual:**
+Por el momento no la opción de configuración a traves de la interfaz de administración no está disponible.
 
-    La configuración manual se realiza en el archivo "config.json".
+### **- Configuracion manual**
 
-    Para ello hay que añadir el objeto "paymentsOptions", si no se tenía enteriormente, y agregar un objeto con la configuración del servicio que se vaya a utilizar. Al completarlo, debería quedar de la siguiente manera:
+La configuración manual se realiza en el archivo "config.json".
 
-    ```
-    "paymentsOptions":{
-      <paymentService>:{
-        …
-        …
-      }
-    }
-    ```
+Para ello hay que añadir el objeto "paymentsOptions", si no se tenía enteriormente, y agregar un objeto con la configuración del servicio que se vaya a utilizar. Al completarlo, debería quedar de la siguiente manera:
 
-#### - **Servicios disponibles:**
-  
-  - GlobalOnePay
+```javascript
+"paymentsOptions":{
+  <paymentService>:{
+    …
+    …
+  }
+}
+```
 
-  Identificador: "globalonepay"
+#### **• Ejemplo:**
+```javascript
+"paymentsOptions":{
+  "globalonepay":{
+    "merchandt": "1234XXXX",
+    "terminalId": "990XX",
+    "sharedSecret": "12345678XXX"
+  }
+}
+```
 
+## **Funcionalidades**
 
-#### - **Ejemplos de uso:**
+### **- Registrar una tarjeta:**
 
-  - Registrar una tarjeta:
+```javascript
+var data = {
+ cardNumber:demoCreditCard.MasterCard,
+ cardExpiry:"1220",
+ cardType:"MASTERCARD",
+ cardHolderName:"Messi"  
+};
 
-    ```
-    var data = {
-     cardNumber:demoCreditCard.MasterCard,
-     cardExpiry:"1220",
-     cardType:"MASTERCARD",
-     cardHolderName:"Messi"  
-    };
+App.payments.forService(service)
+  .then(client => client.register(data))
+  .then(resp => console.log(resp))
+  .catch(err => console.log(err));
+```
 
-    App.payments.forService(service)
-      .then(client => client.register(data))
-      .then(resp => console.log(resp))
-      .catch(err => console.log(err));
-    ```
+### **- Pago:**
 
-  - Pago:
+```javascript
+var data = {
+ orderId        : "19827391827392",
+ amount         : "289",
+ currency       : "USD",
+ cardNumber     : demoCreditCard.MasterCard,
+ cardType       : "MASTERCARD",
+ cardExpiry     : "1220",
+ cardHolderName : "Messi" ,
+ cvv            : "124" 
+};
 
-    ```
-    var data = {
-     orderId        : "19827391827392",
-     amount         : "289",
-     currency       : "USD",
-     cardNumber     : demoCreditCard.MasterCard,
-     cardType       : "MASTERCARD",
-     cardExpiry     : "1220",
-     cardHolderName : "Messi" ,
-     cvv            : "124" 
-    };
-    
-    App.payments.forService(service)
-      .then(client => client.pay(data))
-      .then(resp => console.log(resp))
-      .catch(err => console.log(err));
-    ```
+App.payments.forService(service)
+  .then(client => client.pay(data))
+  .then(resp => console.log(resp))
+  .catch(err => console.log(err));
+```
 
-  - Pago con una tarjeta registrada:
+### **- Pago con una tarjeta registrada:**
 
-    ```
-    var data = {
-     orderId        : "19827391827393",
-     amount         : "289",
-     currency       : "USD",
-     cardNumber     : "2967535088608700"
-    };
-    
-    App.payments.forService(service)
-      .then(client => client.payRegistered(data))
-      .then(resp => console.log(resp))
-      .catch(err => console.log(err));
-    ```
+```javascript
+var data = {
+ orderId        : "19827391827393",
+ amount         : "289",
+ currency       : "USD",
+ cardNumber     : "2967535088608700"
+};
 
-  - Devolución:
+App.payments.forService(service)
+  .then(client => client.payRegistered(data))
+  .then(resp => console.log(resp))
+  .catch(err => console.log(err));
+```
 
-    ```
-    var data = {
-     paymentRef : "DG5Z3SB3QJ",
-     amount     : "53"
-    };
-    var options = {
-      operator : "Someone",
-      reason   : "My reason"
-    }
-    App.payments.forService(service)
-      .then(client => client.refund(data, options))
-      .then(resp => console.log(resp))
-      .catch(err => console.log(err));
-    ```
+### **- Devolución:**
 
-    
+```javascript
+var data = {
+ paymentRef : "DG5Z3SB3QJ",
+ amount     : "53"
+};
+var options = {
+  operator : "Someone",
+  reason   : "My reason"
+}
+App.payments.forService(service)
+  .then(client => client.refund(data, options))
+  .then(resp => console.log(resp))
+  .catch(err => console.log(err));
+```

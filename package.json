@@ -23,5 +23,9 @@
   "homepage": "https://github.com/toroback/tb-payments#readme",
   "dependencies": {
     "mongoose": "^4.12.0"
+  },
+  "devDependencies": {
+    "ink-docstrap": "^1.3.0",
+    "jsdoc-route-plugin": "^0.1.0"
   }
 }
