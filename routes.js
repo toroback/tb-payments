@@ -34,7 +34,11 @@ function setupRoutes(App){
    *
    * @queryparam {String} [service] Servicio en el que registrar la tarjeta. (Ej. "service=globalonepay")
    *
-   * @bodyparam  {Object} data Información del pago que se va a realizar. La información dependerá del servicio a utilizar.
+   * @bodyparam  {Object} data Información de la tarjeta que se va a registrar.
+   * @bodyparam  {String} data.cardNumber Número de la tarjeta de crédito.
+   * @bodyparam  {String} data.cardExpiry Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").
+   * @bodyparam  {String} data.cardType  Tipo de tarjeta de crédito (EJ: MASTERCARD).
+   * @bodyparam  {String} data.cardHolderName Nombre en la tarjeta de crédito.
    *
    */
   router.post("/register",function(req, res, next){
@@ -89,7 +93,17 @@ function setupRoutes(App){
    * @queryparam {String} [service] Servicio por el que realizar el pago. (Ej. "service=globalonepay")
    *
    * @bodyparam  {Object} data Información del pago que se va a realizar. La información dependerá del servicio a utilizar.
+   * @bodyparam  {String} data.orderId Identificador de la compra
+   * @bodyparam  {String} data.amount  Valor de la compra
+   * @bodyparam  {String} data.currency  Divisa en la que se va a realizar el pago
+   * @bodyparam  {String} data.cardNumber Número de la tarjeta de crédito.
+   * @bodyparam  {String} data.cardExpiry Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").
+   * @bodyparam  {String} data.cardType  Tipo de tarjeta de crédito (EJ: MASTERCARD).
+   * @bodyparam  {String} data.cardHolderName Nombre en la tarjeta de crédito.
+   * @bodyparam  {String} data.cvv Código secreto que aparece en la tarjeta
    * @bodyparam  {Object} [options] Opciones extras relacionadas con el pago. La información dependerá del servicio a utilizar.
+   * @bodyparam  {String} options.terminalType Terminal Type del servicio
+   * @bodyparam  {String} options.transactionType Tipo de transacción del servicio
    *
    */
   router.post("/pay",function(req, res, next){
@@ -118,7 +132,13 @@ function setupRoutes(App){
    * @queryparam {String} [service] Servicio por el que realizar el pago. (Ej. "service=globalonepay")
    *
    * @bodyparam  {Object} data Información del pago que se va a realizar. La información dependerá del servicio a utilizar.
+   * @bodyparam  {String} data.orderId Identificador de la compra
+   * @bodyparam  {String} data.amount  Valor de la compra
+   * @bodyparam  {String} data.currency  Divisa en la que se va a realizar el pago
+   * @bodyparam  {String} data.cardNumber Identificador de la tarjeta de crédito registrada
    * @bodyparam  {Object} [options] Opciones extras relacionadas con el pago. La información dependerá del servicio a utilizar.
+   * @bodyparam  {String} options.terminalType Terminal Type del servicio
+   * @bodyparam  {String} options.transactionType Tipo de transacción del servicio
    *
    */
   router.post("/payRegistered",function(req, res, next){
@@ -143,8 +163,12 @@ function setupRoutes(App){
    *
    * @queryparam {String} [service] Servicio por el que realizar la devolucion. (Ej. "service=globalonepay")
    *
-   * @bodyparam  {Object} data Información de la devolución que se va a realizar. La información dependerá del servicio a utilizar.
-   * @bodyparam  {Object} [options] Opciones extras relacionadas con la devolución. La información dependerá del servicio a utilizar.
+   * @bodyparam  {Object} data Información de la devolución que se va a realizar.
+   * @bodyparam  {String} data.paymentRef  Referencia del pago del que se va a realizar la devolución
+   * @bodyparam  {String} data.amount      Cantidad a devolver
+   * @bodyparam  {Object} [options] Opciones extras relacionadas con la devolución.
+   * @bodyparam  {String} [options.operator]  Nombre de quien realiza la operacion
+   * @bodyparam  {String} [options.reason]    Razón de la devolución
    *
    */
   router.post("/refund",function(req, res, next){

@@ -41,6 +41,11 @@ class Client {
   /**
    * Crea un gestor de pagos. Utilizar los modulos tb-payments-globalonepay, etc…
    * @param  {Object} options               Objeto con las credenciales para el servicio.
+   * @param  {Object} options.merchandt       Código merchandt para el servicio
+   * @param  {Object} options.terminalId      TerminalID para el servicio
+   * @param  {Object} options.sharedSecret    SharedSecret para el servicio
+   * @param  {Object} [options.url]           URL para el servicio de pagos
+   * @param  {Object} [options.port]          Puerto para el servicio de pagos
    * @param  {Object} Adapter        Adapter del servicio que se va a utilizar. 
    */
   constructor(options, Adapter) {
@@ -48,9 +53,13 @@ class Client {
     this.adapter = new Adapter(this);
   }
   
-  /**
+   /**
    * Registra una tarjeta de credito
-   * @param  {Object} data Información de la tarjeta a registrar. La información dependerá del servicio a utilizar.
+   * @param  {Object} data Información de la tarjeta a registrar.
+   * @param  {String} data.cardNumber Número de la tarjeta de crédito.
+   * @param  {String} data.cardExpiry Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").
+   * @param  {String} data.cardType  Tipo de tarjeta de crédito (EJ: MASTERCARD).
+   * @param  {String} data.cardHolderName Nombre en la tarjeta de crédito.
    * @return {Promise<PaymentRegisterSchema>} Promesa con la información del registro
    */
   register(data) {
@@ -94,7 +103,17 @@ class Client {
   /**
    * Realiza un pago
    * @param  {Object} data Información del pago que se va a realizar. La información dependerá del servicio a utilizar.
+   * @param  {String} data.orderId Identificador de la compra
+   * @param  {String} data.amount  Valor de la compra
+   * @param  {String} data.currency  Divisa en la que se va a realizar el pago
+   * @param  {String} data.cardNumber Número de la tarjeta de crédito.
+   * @param  {String} data.cardExpiry Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").
+   * @param  {String} data.cardType  Tipo de tarjeta de crédito (EJ: MASTERCARD).
+   * @param  {String} data.cardHolderName Nombre en la tarjeta de crédito.
+   * @param  {String} data.cvv Código secreto que aparece en la tarjeta
    * @param  {Object} [options] Opciones extras relacionadas con el pago. La información dependerá del servicio a utilizar.
+   * @param  {String} options.terminalType Terminal Type de GlobalOnePay
+   * @param  {String} options.transactionType Tipo de transacción de GlobalOnePay
    * @return {Promise<TransactionSchema>} Promesa con la información de la transacción
    */
   pay(data, options){
@@ -116,7 +135,13 @@ class Client {
   /**
    * Realiza un pago con una tarjeta de crédito previamente registrada
    * @param  {Object} data Información del pago que se va a realizar. La información dependerá del servicio a utilizar.
+   * @param  {String} data.orderId Identificador de la compra
+   * @param  {String} data.amount  Valor de la compra
+   * @param  {String} data.currency  Divisa en la que se va a realizar el pago
+   * @param  {String} data.cardNumber Identificador de la tarjeta de crédito registrada
    * @param  {Object} [options] Opciones extras relacionadas con el pago. La información dependerá del servicio a utilizar.
+   * @param  {String} options.terminalType Terminal Type de GlobalOnePay
+   * @param  {String} options.transactionType Tipo de transacción de GlobalOnePay
    * @return {Promise<TransactionSchema>} Promesa con la información de la transacción
    */
   payRegistered(data, options){
@@ -137,7 +162,11 @@ class Client {
   /**
    * Realiza una devolución
    * @param  {Object} data Información de la devolución que se va a realizar. La información dependerá del servicio a utilizar.
+   * @param  {String} data.paymentRef  Referencia del pago del que se va a realizar la devolución
+   * @param  {String} data.amount      Cantidad a devolver
    * @param  {Object} [options] Opciones extras relacionadas con la devolución. La información dependerá del servicio a utilizar.
+   * @param  {String} [options.operator]  Nombre de quien realiza la operacion
+   * @param  {String} [options.reason]    Razón de la devolución
    * @return {Promise<TransactionSchema>} Promesa con la información de la transacción
    */
   refund(data, options){
