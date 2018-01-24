@@ -168,10 +168,17 @@ class Client {
   refund(data, options){
     return new Promise((resolve, reject) =>{
       console.log("-> payments.refund ");
+      let PaymentsTransaction = App.db.model('tb.payments-transaction');
+      var transactionData;
       this.adapter.refund(data, options)
-        .then(transactionData => {
-          let PaymentsTransaction = App.db.model('tb.payments-transaction');
+        .then(resp => {
+          transactionData = resp;
+          return PaymentsTransaction.findOne({'action':'pay', 'rPayReference': data.paymentRef});
+        })
+        .then(doc =>{
           let transaction = new PaymentsTransaction(transactionData);
+          transaction.orderId = doc.orderId;
+          transaction.cardNumber = doc.cardNumber;
           return transaction.save();
         })
         .then(resolve)

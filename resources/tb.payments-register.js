@@ -5,9 +5,18 @@ var mongoose = require('mongoose'),
  * Modelo de datos que contiene información sobre el registro de una tarjeta de crédito
  * @class PaymentRegisterSchema
  * @memberOf module:tb-payments
+ * @property {String} cardNumber Número de tarjeta. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto
+ * @property {String} cardExpiry Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").
+ * @property {String} cardHolderName Nombre en la tarjeta de crédito.
+ * @property {Date} regts Timestamp de la fecha de registro
+ * @property {Date} regrespts Timestamp de le fecha de la respuesta del registro
+ * @property {String} reference Referencia de la tarjeta registrada
+ * @property {Boolean} active Flag que indica si la tarjeta está activa o no
+ * @property {Date} [unregts] Timestamp de la fecha de desregistro de la tarjeta. Solo tarjetas desregistradas
+ * @property {Date} [unregrespts] Timestamp de le fecha de la respuesta del desregistro. Solo tarjetas desregistradas
  */ 
 var PaymentRegisterSchema = new Schema({  
-  cardNumber : { type: String }, // Solo se guardan los 4 ultimos digitos con asteriscos el resto si es el numero de tarjeta y si es referencia la referencia
+  cardNumber : { type: String }, // Número de tarjeta. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto
   cardExpiry : { type: String }, 
   cardHolderName : { type: String },
   regts : { type: Date }, //timestamp de la fecha de registro

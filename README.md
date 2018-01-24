@@ -46,9 +46,25 @@ Para ello hay que añadir el objeto "paymentsOptions", si no se tenía anteriorm
 ```javascript
 "paymentsOptions":{
   "globalonepay":{
-    "merchandt": "1234XXXX",
-    "terminalId": "990XX",
-    "sharedSecret": "12345678XXX"
+    "terminalId": "myTerminalId",
+    "sharedSecret": "mySharedSecret",
+    "mcp": <True, False. Flag que indica si soporta multiples monedas>,
+    "url": <Url del servicio>,
+    "port": <Puerto de comunicacion del servicio>
+  }
+}
+```
+
+Al completarlo, debería quedar de la siguiente manera:
+
+```javascript
+"paymentsOptions":{
+  "globalonepay":{
+    "terminalId": "99089",
+    "sharedSecret": "123456789XX",
+    "mcp": true,
+    "url": myServiceUrl,
+    "port": myServicePort
   }
 }
 ```
@@ -76,10 +92,25 @@ Para ello hay que añadir el objeto "paymentsOptions", si no se tenía anteriorm
 | Clave | Tipo | Opcional   | Descripción  |
 |---|---|:---:|---|
 |data|Object||Información de la tarjeta que se va a registrar. La información dependerá del servicio a utilizar|
+|data.merchantRef|String||Identificador único para la tarjeta que se va a registrar| 
 |data.cardNumber|String||Número de la tarjeta de crédito.|
 |data.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").|
 |data.cardType|String||Información de la tarjeta que se va a registrar. La información dependerá del servicio a utilizar|
+|data.cvv|String||Código de seguridad impreso en la tarjeta| 
 |data.cardHolderName|String||Información de la tarjeta que se va a registrar. La información dependerá del servicio a utilizar|
+
+**Respuesta:**
+
+| Clave | Tipo | Opcional | Descripción |
+|---|---|:---:|---|
+|register|tb.payments-register||Objeto con la información de la tarjeta registrada|
+|register.cardNumber|String||Número de tarjeta. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto|
+|register.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").|
+|register.cardHolderName|String||Nombre en la tarjeta de crédito.|
+|register.regts|Date||Timestamp de la fecha de registro|
+|register.regrespts|Date||Timestamp de le fecha de la respuesta del registro|
+|register.reference|String||Referencia de la tarjeta registrada|
+|register.active|Boolean||Flag que indica si la tarjeta está activa o no|
 
 **Ejemplo:**
 
@@ -90,10 +121,12 @@ POST: `https://a2server.a2system.net:1234/api/v1/srv/payments/register?service=g
 ```javascript
  {
    "data": {
+     "merchantRef":"1234567890123459",
      "cardNumber":myCardNumber,
      "cardExpiry":"1220",
      "cardType":"MASTERCARD",
-     "cardHolderName2:"Messi"  
+     "cardHolderName":"Messi",
+     "cvv": "231"  
    }
  }
 ```
@@ -105,10 +138,25 @@ POST: `https://a2server.a2system.net:1234/api/v1/srv/payments/register?service=g
 | Clave | Tipo | Opcional   | Descripción  |
 |---|---|:---:|---|
 |data|Object||Información de la tarjeta que se va a registrar. La información dependerá del servicio a utilizar|
+|data.merchantRef|String||Identificador único para la tarjeta que se va a registrar| 
 |data.cardNumber|String||Número de la tarjeta de crédito.|
 |data.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").|
 |data.cardType|String||Información de la tarjeta que se va a registrar. La información dependerá del servicio a utilizar|
+|data.cvv|String||Código de seguridad impreso en la tarjeta| 
 |data.cardHolderName|String||Información de la tarjeta que se va a registrar. La información dependerá del servicio a utilizar|
+
+**Respuesta:**
+
+| Clave | Tipo | Opcional | Descripción |
+|---|---|:---:|---|
+|register|tb.payments-register||Objeto con la información de la tarjeta registrada|
+|register.cardNumber|String||Número de tarjeta. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto|
+|register.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").|
+|register.cardHolderName|String||Nombre en la tarjeta de crédito.|
+|register.regts|Date||Timestamp de la fecha de registro|
+|register.regrespts|Date||Timestamp de le fecha de la respuesta del registro|
+|register.reference|String||Referencia de la tarjeta registrada|
+|register.active|Boolean||Flag que indica si la tarjeta está activa o no|
 
 **Ejemplo:**
 
@@ -116,14 +164,112 @@ POST: `https://a2server.a2system.net:1234/api/v1/srv/payments/register?service=g
 var service = "globalonepay";
 
 var data = {
- cardNumber:myCardNumber,
- cardExpiry:"1220",
- cardType:"MASTERCARD",
- cardHolderName:"Messi"  
+  merchantRef:"1234567890123459",
+  cardNumber:myCardNumber,
+  cardExpiry:"1220",
+  cardType:"MASTERCARD",
+  cvv: "231",
+  cardHolderName:"Messi" 
 };
 
 App.payments.forService(service)
   .then(client => client.register(data))
+  .then(resp => console.log(resp))
+  .catch(err => console.log(err));
+```
+
+### **- Desregistrar una tarjeta:**
+
+#### **• REST Api:**
+
+**Petición:**
+
+|HTTP Method|URL|
+|:---:|:---|
+|POST| `https://[domain]:[port]/api/v[apiVersion]/srv/payments/unregister?service=<service>`|
+
+**Parámetros del query:**
+
+| Clave | Tipo | Opcional   | Descripción  |
+|---|---|:---:|---|
+|service|String|X|Servicio de pago a utilizar (valores: globalonepay)|
+
+**Parámetros del body:**
+
+| Clave | Tipo | Opcional   | Descripción  |
+|---|---|:---:|---|
+|data|Object||Información de la tarjeta que se va a registrar. La información dependerá del servicio a utilizar|
+|data.merchantRef|String||Identificador único para la tarjeta que se va a registrar| 
+|data.reference|String||Referencia en el servicio de la tarjeta de crédito registrada.|
+
+**Respuesta:**
+
+| Clave | Tipo | Opcional | Descripción |
+|---|---|:---:|---|
+|register|tb.payments-register||Objeto con la información de la tarjeta registrada|
+|register.cardNumber|String||Número de tarjeta. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto|
+|register.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").|
+|register.cardHolderName|String||Nombre en la tarjeta de crédito.|
+|register.regts|Date||Timestamp de la fecha de registro|
+|register.regrespts|Date||Timestamp de le fecha de la respuesta del registro|
+|register.reference|String||Referencia de la tarjeta registrada|
+|register.active|Boolean||Flag que indica si la tarjeta está activa o no|
+|register.unregts|Date||Timestamp de la fecha de desregistro de la tarjeta. Solo tarjetas desregistradas|
+|register.unregrespts|Date||Timestamp de le fecha de la respuesta del desregistro. Solo tarjetas desregistradas|
+
+
+**Ejemplo:**
+
+POST: `https://a2server.a2system.net:1234/api/v1/srv/payments/unregister?service=globalonepay`
+
+* BODY: 
+
+```javascript
+ {
+   "data": {
+     "merchantRef":"1234567890123459",
+     "reference": "L190394333"
+   }
+ }
+```
+
+#### **• Código Javascript:**
+
+**Parámetros:**
+
+| Clave | Tipo | Opcional   | Descripción  |
+|---|---|:---:|---|
+|data|Object||Información de la tarjeta que se va a registrar. La información dependerá del servicio a utilizar|
+|data.merchantRef|String||Identificador único para la tarjeta que se va a registrar| 
+|data.reference|String||Referencia en el servicio de la tarjeta de crédito registrada.|
+
+**Respuesta:**
+
+| Clave | Tipo | Opcional | Descripción |
+|---|---|:---:|---|
+|register|tb.payments-register||Objeto con la información de la tarjeta registrada|
+|register.cardNumber|String||Número de tarjeta. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto|
+|register.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").|
+|register.cardHolderName|String||Nombre en la tarjeta de crédito.|
+|register.regts|Date||Timestamp de la fecha de registro|
+|register.regrespts|Date||Timestamp de le fecha de la respuesta del registro|
+|register.reference|String||Referencia de la tarjeta registrada|
+|register.active|Boolean||Flag que indica si la tarjeta está activa o no|
+|register.unregts|Date||Timestamp de la fecha de desregistro de la tarjeta. Solo tarjetas desregistradas|
+|register.unregrespts|Date||Timestamp de le fecha de la respuesta del desregistro. Solo tarjetas desregistradas|
+
+**Ejemplo:**
+
+```javascript
+var service = "globalonepay";
+
+var data = {
+  merchantRef:"1234567890123459",
+  reference:L190394333
+};
+
+App.payments.forService(service)
+  .then(client => client.unregister(data))
   .then(resp => console.log(resp))
   .catch(err => console.log(err));
 ```
@@ -160,6 +306,25 @@ App.payments.forService(service)
 |options|Object|X|Opciones extras relacionadas con el pago. La información dependerá del servicio a utilizar.|
 |options.terminalType|String||Terminal Type del servicio|
 |options.transactionType|String||Tipo de transacción del servicio|
+
+**Respuesta:**
+
+| Clave | Tipo | Opcional | Descripción |
+|---|---|:---:|---|
+|transaction|tb.payments-transaction||Objeto con la información de la transacción|
+|transaction.action|String||"pay" - Acción que se realiza en la transacción|
+|transaction.orderId|String||Identificador de orden de la transacción|
+|transaction.amount|Number||Cantidad de dinero de la transacción|
+|transaction.currency|tString||ISO de la Moneda de la transacción|
+|transaction.payReference|String||Referencia del pago que se utiliza en la transacción (Para devoluciones)|
+|transaction.payTs|Date||Timestamp de la fecha en que se solicita la transacción |
+|transaction.optional|Object||Información adicional relacionada con la transacción|
+|transaction.cardNumber|String||Número de tarjeta o referencia de tarjeta registrada. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto y si es la referencia se guarda el numero completo|
+|transaction.rPayReference|String||Número de referencia del pago o devolución de la transaccion realizada|
+|transaction.rPayTs|Date||Timestamp de la fecha en que se realiza la transacción|
+|transaction.rApproved|Boolean||Flag que indica si la transacción fue aprobada|
+|transaction.rPaycode|String||Código de respuesta del estado de la transacción |
+|transaction.respts|Date||Timestamp de la fecha en que se recibe la respuesta de la transacción|
 
 **Ejemplo:**
 
@@ -201,6 +366,25 @@ POST: `https://a2server.a2system.net:1234/api/v1/srv/payments/pay?service=global
 |options.terminalType|String||Terminal Type del servicio|
 |options.transactionType|String||Tipo de transacción del servicio|
 
+**Respuesta:**
+
+| Clave | Tipo | Opcional | Descripción |
+|---|---|:---:|---|
+|transaction|tb.payments-transaction||Objeto con la información de la transacción|
+|transaction.action|String||"pay" - Acción que se realiza en la transacción|
+|transaction.orderId|String||Identificador de orden de la transacción|
+|transaction.amount|Number||Cantidad de dinero de la transacción|
+|transaction.currency|tString||ISO de la Moneda de la transacción|
+|transaction.payReference|String||Referencia del pago que se utiliza en la transacción (Para devoluciones)|
+|transaction.payTs|Date||Timestamp de la fecha en que se solicita la transacción |
+|transaction.optional|Object||Información adicional relacionada con la transacción|
+|transaction.cardNumber|String||Número de tarjeta o referencia de tarjeta registrada. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto y si es la referencia se guarda el numero completo|
+|transaction.rPayReference|String||Número de referencia del pago o devolución de la transaccion realizada|
+|transaction.rPayTs|Date||Timestamp de la fecha en que se realiza la transacción|
+|transaction.rApproved|Boolean||Flag que indica si la transacción fue aprobada|
+|transaction.rPaycode|String||Código de respuesta del estado de la transacción |
+|transaction.respts|Date||Timestamp de la fecha en que se recibe la respuesta de la transacción|
+
 **Ejemplo:**
 
 ```javascript
@@ -235,9 +419,22 @@ App.payments.forService(service)
 
 **Parámetros del query:**
 
-| Clave | Tipo | Opcional   | Descripción  |
+| Clave | Tipo | Opcional | Descripción |
 |---|---|:---:|---|
-|service|String|X|Servicio de pago a utilizar (valores: globalonepay)|
+|transaction|tb.payments-transaction||Objeto con la información de la transacción|
+|transaction.action|String||"pay" - Acción que se realiza en la transacción|
+|transaction.orderId|String||Identificador de orden de la transacción|
+|transaction.amount|Number||Cantidad de dinero de la transacción|
+|transaction.currency|tString||ISO de la Moneda de la transacción|
+|transaction.payReference|String||Referencia del pago que se utiliza en la transacción (Para devoluciones)|
+|transaction.payTs|Date||Timestamp de la fecha en que se solicita la transacción |
+|transaction.optional|Object||Información adicional relacionada con la transacción|
+|transaction.cardNumber|String||Número de tarjeta o referencia de tarjeta registrada. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto y si es la referencia se guarda el numero completo|
+|transaction.rPayReference|String||Número de referencia del pago o devolución de la transaccion realizada|
+|transaction.rPayTs|Date||Timestamp de la fecha en que se realiza la transacción|
+|transaction.rApproved|Boolean||Flag que indica si la transacción fue aprobada|
+|transaction.rPaycode|String||Código de respuesta del estado de la transacción |
+|transaction.respts|Date||Timestamp de la fecha en que se recibe la respuesta de la transacción|
 
 **Parámetros del body:**
 
@@ -251,6 +448,12 @@ App.payments.forService(service)
 |options|Object|X|Opciones extras relacionadas con el pago. La información dependerá del servicio a utilizar.|
 |options.terminalType|String||Terminal Type del servicio|
 |options.transactionType|String||Tipo de transacción del servicio|
+
+**Respuesta:**
+
+| Clave | Tipo | Opcional | Descripción |
+|---|---|:---:|---|
+|transaction|tb.payments-transaction||Objeto con la información de la transacción|
 
 **Ejemplo:**
 
@@ -283,6 +486,25 @@ POST: `https://a2server.a2system.net:1234/api/v1/srv/payments/payRegistered?serv
 |options|Object|X|Opciones extras relacionadas con el pago. La información dependerá del servicio a utilizar.|
 |options.terminalType|String||Terminal Type del servicio|
 |options.transactionType|String||Tipo de transacción del servicio|
+
+**Respuesta:**
+
+| Clave | Tipo | Opcional | Descripción |
+|---|---|:---:|---|
+|transaction|tb.payments-transaction||Objeto con la información de la transacción|
+|transaction.action|String||"pay" - Acción que se realiza en la transacción|
+|transaction.orderId|String||Identificador de orden de la transacción|
+|transaction.amount|Number||Cantidad de dinero de la transacción|
+|transaction.currency|tString||ISO de la Moneda de la transacción|
+|transaction.payReference|String||Referencia del pago que se utiliza en la transacción (Para devoluciones)|
+|transaction.payTs|Date||Timestamp de la fecha en que se solicita la transacción |
+|transaction.optional|Object||Información adicional relacionada con la transacción|
+|transaction.cardNumber|String||Número de tarjeta o referencia de tarjeta registrada. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto y si es la referencia se guarda el numero completo|
+|transaction.rPayReference|String||Número de referencia del pago o devolución de la transaccion realizada|
+|transaction.rPayTs|Date||Timestamp de la fecha en que se realiza la transacción|
+|transaction.rApproved|Boolean||Flag que indica si la transacción fue aprobada|
+|transaction.rPaycode|String||Código de respuesta del estado de la transacción |
+|transaction.respts|Date||Timestamp de la fecha en que se recibe la respuesta de la transacción|
 
 **Ejemplo:**
 
@@ -329,6 +551,25 @@ App.payments.forService(service)
 |options.operator|String||Nombre de quien realiza la operacion|
 |options.reason|String||Razón de la devolución|
 
+**Respuesta:**
+
+| Clave | Tipo | Opcional | Descripción |
+|---|---|:---:|---|
+|transaction|tb.payments-transaction||Objeto con la información de la transacción|
+|transaction.action|String||"refund" - Acción que se realiza en la transacción|
+|transaction.orderId|String||Identificador de orden de la transacción|
+|transaction.amount|Number||Cantidad de dinero de la transacción|
+|transaction.currency|tString||ISO de la Moneda de la transacción|
+|transaction.payReference|String||Referencia del pago que se utiliza en la transacción (Para devoluciones)|
+|transaction.payTs|Date||Timestamp de la fecha en que se solicita la transacción |
+|transaction.optional|Object||Información adicional relacionada con la transacción|
+|transaction.cardNumber|String||Número de tarjeta o referencia de tarjeta registrada. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto y si es la referencia se guarda el numero completo|
+|transaction.rPayReference|String||Número de referencia del pago o devolución de la transaccion realizada|
+|transaction.rPayTs|Date||Timestamp de la fecha en que se realiza la transacción|
+|transaction.rApproved|Boolean||Flag que indica si la transacción fue aprobada|
+|transaction.rPaycode|String||Código de respuesta del estado de la transacción |
+|transaction.respts|Date||Timestamp de la fecha en que se recibe la respuesta de la transacción|
+
 **Ejemplo:**
 
 POST: `https://a2server.a2system.net:1234/api/v1/srv/payments/refund?service=globalonepay`
@@ -356,6 +597,25 @@ POST: `https://a2server.a2system.net:1234/api/v1/srv/payments/refund?service=glo
 |options|Object|X|Opciones extras relacionadas con la devolución. |
 |options.operator|String||Nombre de quien realiza la operacion|
 |options.reason|String||Razón de la devolución|
+
+**Respuesta:**
+
+| Clave | Tipo | Opcional | Descripción |
+|---|---|:---:|---|
+|transaction|tb.payments-transaction||Objeto con la información de la transacción|
+|transaction.action|String||"refund" - Acción que se realiza en la transacción|
+|transaction.orderId|String||Identificador de orden de la transacción|
+|transaction.amount|Number||Cantidad de dinero de la transacción|
+|transaction.currency|tString||ISO de la Moneda de la transacción|
+|transaction.payReference|String||Referencia del pago que se utiliza en la transacción (Para devoluciones)|
+|transaction.payTs|Date||Timestamp de la fecha en que se solicita la transacción |
+|transaction.optional|Object||Información adicional relacionada con la transacción|
+|transaction.cardNumber|String||Número de tarjeta o referencia de tarjeta registrada. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto y si es la referencia se guarda el numero completo|
+|transaction.rPayReference|String||Número de referencia del pago o devolución de la transaccion realizada|
+|transaction.rPayTs|Date||Timestamp de la fecha en que se realiza la transacción|
+|transaction.rApproved|Boolean||Flag que indica si la transacción fue aprobada|
+|transaction.rPaycode|String||Código de respuesta del estado de la transacción |
+|transaction.respts|Date||Timestamp de la fecha en que se recibe la respuesta de la transacción|
 
 **Ejemplo:**
 
