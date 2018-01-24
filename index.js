@@ -41,7 +41,6 @@ class Client {
   /**
    * Crea un gestor de pagos. Utilizar los modulos tb-payments-globalonepay, etc…
    * @param  {Object} options               Objeto con las credenciales para el servicio.
-   * @param  {Object} options.merchandt       Código merchandt para el servicio
    * @param  {Object} options.terminalId      TerminalID para el servicio
    * @param  {Object} options.sharedSecret    SharedSecret para el servicio
    * @param  {Object} [options.url]           URL para el servicio de pagos
@@ -64,10 +63,9 @@ class Client {
    */
   register(data) {
     return new Promise((resolve, reject) =>{
-      console.log("entra en payments.register index")
+      console.log("-> payments.register ");
       this.adapter.register(data)
         .then(registrationData => {
-          console.log("vuelve a payments.register index")
           let PaymentsRegister = App.db.model('tb.payments-register');
           let registration = new PaymentsRegister(registrationData);
           return registration.save();
@@ -77,28 +75,28 @@ class Client {
     });
   }
 
-  // /**
-  //  * Desregistra una tarjeta de credito. 
-  //  * @param  {Object} data Información de la tarjeta a desregistrar. La información dependerá del servicio a utilizar.
-  //  * @return {Promise<PaymentRegisterSchema>} Promesa que indica si se desregistró correctamente
-  //  */
-  // unregister(data) {
-  //   return new Promise((resolve, reject) =>{
-  //     console.log("entra en payments.register index")
-  //     this.adapter.unregister(data)
-  //       .then(unregistrationData => {
-  //         console.log("vuelve a payments.register index")
-  //         //TODO: No devolver solo true. Habrá que modificar la base de datos cambiando el estado de la tarjeta
-        
-  //         // let PaymentsRegister = App.db.model('tb.payments-register');
-  //         // let registration = new PaymentsRegister(registrationData);
-  //         // return registration.save();
-  //         resolve({ok: true});
-  //       })
-  //       // .then(resolve)
-  //       .catch(reject);
-  //   });
-  // }
+    /**
+   * Desregistra una tarjeta de credito. 
+   * @param  {Object} data Información de la tarjeta a desregistrar. La información dependerá del servicio a utilizar.
+   * @param  {String} data.merchantRef Identificador personal de la tarjeta de crédito que se va a desregistrar.
+   * @param  {String} data.reference Referencia en el servicio externo de la tarjeta de crédito registrada. 
+   * @return {Promise<PaymentRegisterSchema>} Promesa que indica si se desregistró correctamente
+   */
+  unregister(data) {
+    return new Promise((resolve, reject) =>{
+      console.log("-> payments.unregister ");
+      this.adapter.unregister(data)
+        .then(unregistrationData => {  
+          let PaymentsRegister = App.db.model('tb.payments-register');
+
+          var match = { 'reference': unregistrationData.reference };
+          var update =  { '$set': { active: false, unregts: unregistrationData.unregts, unregrespts: unregistrationData.unregrespts }};
+          return PaymentsRegister.findOneAndUpdate(match, update, {'new': true});
+        })
+        .then(resolve)
+        .catch(reject);
+    });
+  }
 
   /**
    * Realiza un pago
@@ -118,10 +116,9 @@ class Client {
    */
   pay(data, options){
     return new Promise((resolve, reject) =>{
-      console.log("entra en payments.pay index")
+      console.log("-> payments.pay ");
       this.adapter.pay(data, options)
         .then(transactionData => {
-          console.log("vuelve a payments.pay index")
           let PaymentsTransaction = App.db.model('tb.payments-transaction');
           let transaction = new PaymentsTransaction(transactionData);
           return transaction.save();
@@ -146,10 +143,9 @@ class Client {
    */
   payRegistered(data, options){
     return new Promise((resolve, reject) =>{
-      console.log("entra en payments.payRegistered index")
+      console.log("-> payments.payRegistered ");
       this.adapter.payRegistered(data, options)
         .then(transactionData => {
-          console.log("vuelve a payments.payRegistered index")
           let PaymentsTransaction = App.db.model('tb.payments-transaction');
           let transaction = new PaymentsTransaction(transactionData);
           return transaction.save();
@@ -171,10 +167,9 @@ class Client {
    */
   refund(data, options){
     return new Promise((resolve, reject) =>{
-      console.log("entra en payments.refund index")
+      console.log("-> payments.refund ");
       this.adapter.refund(data, options)
         .then(transactionData => {
-          console.log("vuelve a payments.refund index")
           let PaymentsTransaction = App.db.model('tb.payments-transaction');
           let transaction = new PaymentsTransaction(transactionData);
           return transaction.save();

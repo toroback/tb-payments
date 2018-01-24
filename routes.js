@@ -56,32 +56,32 @@ function setupRoutes(App){
 
   });
 
-  //  /** 
-  //  * Desregistra una tarjeta de credito. 
-  //  *
-  //  * @name  Desregistro de tarjeta de crédito
-  //  * 
-  //  * @route {POST} srv/payments/unregister
-  //  *
-  //  * @queryparam {String} [service] Servicio en el que desregistrar la tarjeta. (Ej. "service=globalonepay")
-  //  *
-  //  * @bodyparam  {Object} data Información del pago que se va a realizar. La información dependerá del servicio a utilizar.
-  //  *
-  //  */
-  // router.post("/unregister",function(req, res, next){
-  //   var ctx = req._ctx;
-  //   let service = ctx.resource;
-  //   let payload = ctx.payload;
-  //   ctx.model = "payments";
-  //   ctx.method = 'unregister';
+   /** 
+   * Desregistra una tarjeta de credito. 
+   *
+   * @name  Desregistro de tarjeta de crédito
+   * 
+   * @route {POST} srv/payments/unregister
+   *
+   * @queryparam {String} [service] Servicio en el que desregistrar la tarjeta. (Ej. "service=globalonepay")
+   *
+   * @bodyparam  {Object} data Información del pago que se va a realizar. La información dependerá del servicio a utilizar.
+   *
+   */
+  router.post("/unregister",function(req, res, next){
+    var ctx = req._ctx;
+    let service = ctx.resource;
+    let payload = ctx.payload;
+    ctx.model = "payments";
+    ctx.method = 'unregister';
 
-  //   console.log("entra en payments.unregister route")
-  //   Client.forService(service)
-  //     .then(client => client.unregister(payload.data))
-  //     .then(resp => res.status(200).json(resp))
-  //     .catch(err => next(err));
+    console.log("entra en payments.unregister route")
+    Client.forService(service)
+      .then(client => client.unregister(payload.data))
+      .then(resp => res.status(200).json(resp))
+      .catch(err => next(err));
 
-  // });
+  });
 
    /** 
    * Realiza un pago
