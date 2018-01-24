@@ -56,7 +56,7 @@ class Client {
    * Registra una tarjeta de credito
    * @param  {Object} data Información de la tarjeta a registrar.
    * @param  {String} data.cardNumber Número de la tarjeta de crédito.
-   * @param  {String} data.cardExpiry Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").
+   * @param  {String} data.cardExpiry Fecha de vencimiento de la tarjeta de crédito en formato "MMYY" (Ej:0920 -> "Septiembre de 2020").
    * @param  {String} data.cardType  Tipo de tarjeta de crédito (EJ: MASTERCARD).
    * @param  {String} data.cardHolderName Nombre en la tarjeta de crédito.
    * @return {Promise<PaymentRegisterSchema>} Promesa con la información del registro
@@ -105,7 +105,7 @@ class Client {
    * @param  {String} data.amount  Valor de la compra
    * @param  {String} data.currency  Divisa en la que se va a realizar el pago
    * @param  {String} data.cardNumber Número de la tarjeta de crédito.
-   * @param  {String} data.cardExpiry Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").
+   * @param  {String} data.cardExpiry Fecha de vencimiento de la tarjeta de crédito en formato "MMYY" (Ej:0920 -> "Septiembre de 2020").
    * @param  {String} data.cardType  Tipo de tarjeta de crédito (EJ: MASTERCARD).
    * @param  {String} data.cardHolderName Nombre en la tarjeta de crédito.
    * @param  {String} data.cvv Código secreto que aparece en la tarjeta

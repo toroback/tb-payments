@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
  * @class PaymentRegisterSchema
  * @memberOf module:tb-payments
  * @property {String} cardNumber Número de tarjeta. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto
- * @property {String} cardExpiry Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").
+ * @property {String} cardExpiry Fecha de vencimiento de la tarjeta de crédito en formato "MMYY" (Ej:0920 -> "Septiembre de 2020").
  * @property {String} cardHolderName Nombre en la tarjeta de crédito.
  * @property {Date} regts Timestamp de la fecha de registro
  * @property {Date} regrespts Timestamp de le fecha de la respuesta del registro

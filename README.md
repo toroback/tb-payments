@@ -94,7 +94,7 @@ Al completarlo, debería quedar de la siguiente manera:
 |data|Object||Información de la tarjeta que se va a registrar. La información dependerá del servicio a utilizar|
 |data.merchantRef|String||Identificador único para la tarjeta que se va a registrar| 
 |data.cardNumber|String||Número de la tarjeta de crédito.|
-|data.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").|
+|data.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMYY" (Ej:0920 -> "Septiembre de 2020").|
 |data.cardType|String||Información de la tarjeta que se va a registrar. La información dependerá del servicio a utilizar|
 |data.cvv|String||Código de seguridad impreso en la tarjeta| 
 |data.cardHolderName|String||Información de la tarjeta que se va a registrar. La información dependerá del servicio a utilizar|
@@ -105,7 +105,7 @@ Al completarlo, debería quedar de la siguiente manera:
 |---|---|:---:|---|
 |register|tb.payments-register||Objeto con la información de la tarjeta registrada|
 |register.cardNumber|String||Número de tarjeta. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto|
-|register.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").|
+|register.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMYY" (Ej:0920 -> "Septiembre de 2020").|
 |register.cardHolderName|String||Nombre en la tarjeta de crédito.|
 |register.regts|Date||Timestamp de la fecha de registro|
 |register.regrespts|Date||Timestamp de le fecha de la respuesta del registro|
@@ -140,7 +140,7 @@ POST: `https://a2server.a2system.net:1234/api/v1/srv/payments/register?service=g
 |data|Object||Información de la tarjeta que se va a registrar. La información dependerá del servicio a utilizar|
 |data.merchantRef|String||Identificador único para la tarjeta que se va a registrar| 
 |data.cardNumber|String||Número de la tarjeta de crédito.|
-|data.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").|
+|data.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMYY" (Ej:0920 -> "Septiembre de 2020").|
 |data.cardType|String||Información de la tarjeta que se va a registrar. La información dependerá del servicio a utilizar|
 |data.cvv|String||Código de seguridad impreso en la tarjeta| 
 |data.cardHolderName|String||Información de la tarjeta que se va a registrar. La información dependerá del servicio a utilizar|
@@ -151,7 +151,7 @@ POST: `https://a2server.a2system.net:1234/api/v1/srv/payments/register?service=g
 |---|---|:---:|---|
 |register|tb.payments-register||Objeto con la información de la tarjeta registrada|
 |register.cardNumber|String||Número de tarjeta. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto|
-|register.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").|
+|register.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMYY" (Ej:0920 -> "Septiembre de 2020").|
 |register.cardHolderName|String||Nombre en la tarjeta de crédito.|
 |register.regts|Date||Timestamp de la fecha de registro|
 |register.regrespts|Date||Timestamp de le fecha de la respuesta del registro|
@@ -208,7 +208,7 @@ App.payments.forService(service)
 |---|---|:---:|---|
 |register|tb.payments-register||Objeto con la información de la tarjeta registrada|
 |register.cardNumber|String||Número de tarjeta. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto|
-|register.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").|
+|register.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMYY" (Ej:0920 -> "Septiembre de 2020").|
 |register.cardHolderName|String||Nombre en la tarjeta de crédito.|
 |register.regts|Date||Timestamp de la fecha de registro|
 |register.regrespts|Date||Timestamp de le fecha de la respuesta del registro|
@@ -249,7 +249,7 @@ POST: `https://a2server.a2system.net:1234/api/v1/srv/payments/unregister?service
 |---|---|:---:|---|
 |register|tb.payments-register||Objeto con la información de la tarjeta registrada|
 |register.cardNumber|String||Número de tarjeta. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto|
-|register.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").|
+|register.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMYY" (Ej:0920 -> "Septiembre de 2020").|
 |register.cardHolderName|String||Nombre en la tarjeta de crédito.|
 |register.regts|Date||Timestamp de la fecha de registro|
 |register.regrespts|Date||Timestamp de le fecha de la respuesta del registro|
@@ -299,7 +299,7 @@ App.payments.forService(service)
 |data.amount|String||Valor de la compra|
 |data.currency|String||Divisa en la que se va a realizar el pago|
 |data.cardNumber|String||Número de la tarjeta de crédito|
-|data.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").|
+|data.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMYY" (Ej:0920 -> "Septiembre de 2020").|
 |data.cardType|String||Tipo de tarjeta de crédito (EJ: MASTERCARD).|
 |data.cardHolderName|String||Nombre en la tarjeta de crédito.|
 |data.cvv|String||Código secreto que aparece en la tarjeta|
@@ -358,7 +358,7 @@ POST: `https://a2server.a2system.net:1234/api/v1/srv/payments/pay?service=global
 |data.amount|String||Valor de la compra|
 |data.currency|String||Divisa en la que se va a realizar el pago|
 |data.cardNumber|String||Número de la tarjeta de crédito|
-|data.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMDD" (Ej:0920 -> "20 de septiembre").|
+|data.cardExpiry|String||Fecha de vencimiento de la tarjeta de crédito en formato "MMYY" (Ej:0920 -> "Septiembre de 2020").|
 |data.cardType|String||Tipo de tarjeta de crédito (EJ: MASTERCARD).|
 |data.cardHolderName|String||Nombre en la tarjeta de crédito.|
 |data.cvv|String||Código secreto que aparece en la tarjeta|
