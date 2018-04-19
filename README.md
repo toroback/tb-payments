@@ -45,7 +45,7 @@ Para ello hay que añadir el objeto "paymentsOptions", si no se tenía anteriorm
 #### **• Ejemplo:**
 ```javascript
 "paymentsOptions":{
-  "globalonepay":{
+  "globalOnePay":{
     "terminalId": "myTerminalId",
     "sharedSecret": "mySharedSecret",
     "mcp": <True, False. Flag que indica si soporta multiples monedas>,
@@ -59,7 +59,7 @@ Al completarlo, debería quedar de la siguiente manera:
 
 ```javascript
 "paymentsOptions":{
-  "globalonepay":{
+  "globalOnePay":{
     "terminalId": "99089",
     "sharedSecret": "123456789XX",
     "mcp": true,
@@ -111,6 +111,8 @@ Al completarlo, debería quedar de la siguiente manera:
 |register.regrespts|Date||Timestamp de le fecha de la respuesta del registro|
 |register.reference|String||Referencia de la tarjeta registrada|
 |register.active|Boolean||Flag que indica si la tarjeta está activa o no|
+|register.originalResponse|Object||Respuesta original del registro|
+|register.serviceProvider|String||Servicio de pagos utilizado para el registro|
 
 **Ejemplo:**
 
@@ -157,6 +159,8 @@ POST: `https://a2server.a2system.net:1234/api/v1/srv/payments/register?service=g
 |register.regrespts|Date||Timestamp de le fecha de la respuesta del registro|
 |register.reference|String||Referencia de la tarjeta registrada|
 |register.active|Boolean||Flag que indica si la tarjeta está activa o no|
+|register.originalResponse|Object||Respuesta original del registro|
+|register.serviceProvider|String||Servicio de pagos utilizado para el registro|
 
 **Ejemplo:**
 
@@ -216,6 +220,8 @@ App.payments.forService(service)
 |register.active|Boolean||Flag que indica si la tarjeta está activa o no|
 |register.unregts|Date||Timestamp de la fecha de desregistro de la tarjeta. Solo tarjetas desregistradas|
 |register.unregrespts|Date||Timestamp de le fecha de la respuesta del desregistro. Solo tarjetas desregistradas|
+|register.originalResponse|Object||Respuesta original del desregistro|
+|register.serviceProvider|String||Servicio de pagos utilizado para el desregistro|
 
 
 **Ejemplo:**
@@ -257,6 +263,8 @@ POST: `https://a2server.a2system.net:1234/api/v1/srv/payments/unregister?service
 |register.active|Boolean||Flag que indica si la tarjeta está activa o no|
 |register.unregts|Date||Timestamp de la fecha de desregistro de la tarjeta. Solo tarjetas desregistradas|
 |register.unregrespts|Date||Timestamp de le fecha de la respuesta del desregistro. Solo tarjetas desregistradas|
+|register.originalResponse|Object||Respuesta original del desregistro|
+|register.serviceProvider|String||Servicio de pagos utilizado para el desregistro|
 
 **Ejemplo:**
 
@@ -325,6 +333,11 @@ App.payments.forService(service)
 |transaction.rApproved|Boolean||Flag que indica si la transacción fue aprobada|
 |transaction.rPaycode|String||Código de respuesta del estado de la transacción |
 |transaction.respts|Date||Timestamp de la fecha en que se recibe la respuesta de la transacción|
+|transaction.rApprovalCode|String||Código de aprovación de la transacción|
+|transaction.rBankcode|String||Código de respuesta de la transacción proporcionado por el banco |
+|transaction.rText|String||Texto de respuesta de la transacción|
+|transaction.originalResponse|Object||Respuesta original del pago|
+|transaction.serviceProvider|String||Servicio de pagos utilizado para el pago|
 
 **Ejemplo:**
 
@@ -384,6 +397,11 @@ POST: `https://a2server.a2system.net:1234/api/v1/srv/payments/pay?service=global
 |transaction.rApproved|Boolean||Flag que indica si la transacción fue aprobada|
 |transaction.rPaycode|String||Código de respuesta del estado de la transacción |
 |transaction.respts|Date||Timestamp de la fecha en que se recibe la respuesta de la transacción|
+|transaction.rApprovalCode|String||Código de aprovación de la transacción|
+|transaction.rBankcode|String||Código de respuesta de la transacción proporcionado por el banco |
+|transaction.rText|String||Texto de respuesta de la transacción|
+|transaction.originalResponse|Object||Respuesta original del pago|
+|transaction.serviceProvider|String||Servicio de pagos utilizado para el pago|
 
 **Ejemplo:**
 
@@ -421,20 +439,7 @@ App.payments.forService(service)
 
 | Clave | Tipo | Opcional | Descripción |
 |---|---|:---:|---|
-|transaction|tb.payments-transaction||Objeto con la información de la transacción|
-|transaction.action|String||"pay" - Acción que se realiza en la transacción|
-|transaction.orderId|String||Identificador de orden de la transacción|
-|transaction.amount|Number||Cantidad de dinero de la transacción|
-|transaction.currency|tString||ISO de la Moneda de la transacción|
-|transaction.payReference|String||Referencia del pago que se utiliza en la transacción (Para devoluciones)|
-|transaction.payTs|Date||Timestamp de la fecha en que se solicita la transacción |
-|transaction.optional|Object||Información adicional relacionada con la transacción|
-|transaction.cardNumber|String||Número de tarjeta o referencia de tarjeta registrada. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto y si es la referencia se guarda el numero completo|
-|transaction.rPayReference|String||Número de referencia del pago o devolución de la transaccion realizada|
-|transaction.rPayTs|Date||Timestamp de la fecha en que se realiza la transacción|
-|transaction.rApproved|Boolean||Flag que indica si la transacción fue aprobada|
-|transaction.rPaycode|String||Código de respuesta del estado de la transacción |
-|transaction.respts|Date||Timestamp de la fecha en que se recibe la respuesta de la transacción|
+|service|String|X|Servicio de pago a utilizar (valores: globalonepay)|
 
 **Parámetros del body:**
 
@@ -454,6 +459,24 @@ App.payments.forService(service)
 | Clave | Tipo | Opcional | Descripción |
 |---|---|:---:|---|
 |transaction|tb.payments-transaction||Objeto con la información de la transacción|
+|transaction.action|String||"pay" - Acción que se realiza en la transacción|
+|transaction.orderId|String||Identificador de orden de la transacción|
+|transaction.amount|Number||Cantidad de dinero de la transacción|
+|transaction.currency|tString||ISO de la Moneda de la transacción|
+|transaction.payReference|String||Referencia del pago que se utiliza en la transacción (Para devoluciones)|
+|transaction.payTs|Date||Timestamp de la fecha en que se solicita la transacción |
+|transaction.optional|Object||Información adicional relacionada con la transacción|
+|transaction.cardNumber|String||Número de tarjeta o referencia de tarjeta registrada. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto y si es la referencia se guarda el numero completo|
+|transaction.rPayReference|String||Número de referencia del pago o devolución de la transaccion realizada|
+|transaction.rPayTs|Date||Timestamp de la fecha en que se realiza la transacción|
+|transaction.rApproved|Boolean||Flag que indica si la transacción fue aprobada|
+|transaction.rPaycode|String||Código de respuesta del estado de la transacción |
+|transaction.respts|Date||Timestamp de la fecha en que se recibe la respuesta de la transacción|
+|transaction.rApprovalCode|String||Código de aprovación de la transacción|
+|transaction.rBankcode|String||Código de respuesta de la transacción proporcionado por el banco |
+|transaction.rText|String||Texto de respuesta de la transacción|
+|transaction.originalResponse|Object||Respuesta original del pago|
+|transaction.serviceProvider|String||Servicio de pagos utilizado para el pago|
 
 **Ejemplo:**
 
@@ -505,6 +528,11 @@ POST: `https://a2server.a2system.net:1234/api/v1/srv/payments/payRegistered?serv
 |transaction.rApproved|Boolean||Flag que indica si la transacción fue aprobada|
 |transaction.rPaycode|String||Código de respuesta del estado de la transacción |
 |transaction.respts|Date||Timestamp de la fecha en que se recibe la respuesta de la transacción|
+|transaction.rApprovalCode|String||Código de aprovación de la transacción|
+|transaction.rBankcode|String||Código de respuesta de la transacción proporcionado por el banco |
+|transaction.rText|String||Texto de respuesta de la transacción|
+|transaction.originalResponse|Object||Respuesta original del pago|
+|transaction.serviceProvider|String||Servicio de pagos utilizado para el pago|
 
 **Ejemplo:**
 
@@ -569,6 +597,9 @@ App.payments.forService(service)
 |transaction.rApproved|Boolean||Flag que indica si la transacción fue aprobada|
 |transaction.rPaycode|String||Código de respuesta del estado de la transacción |
 |transaction.respts|Date||Timestamp de la fecha en que se recibe la respuesta de la transacción|
+|transaction.rText|String||Texto de respuesta de la transacción|
+|transaction.originalResponse|Object||Respuesta original de la transacción|
+|transaction.serviceProvider|String||Servicio de pagos utilizado para de la transacción|
 
 **Ejemplo:**
 
@@ -616,6 +647,9 @@ POST: `https://a2server.a2system.net:1234/api/v1/srv/payments/refund?service=glo
 |transaction.rApproved|Boolean||Flag que indica si la transacción fue aprobada|
 |transaction.rPaycode|String||Código de respuesta del estado de la transacción |
 |transaction.respts|Date||Timestamp de la fecha en que se recibe la respuesta de la transacción|
+|transaction.rText|String||Texto de respuesta de la transacción|
+|transaction.originalResponse|Object||Respuesta original de la transacción|
+|transaction.serviceProvider|String||Servicio de pagos utilizado para de la transacción|
 
 **Ejemplo:**
 

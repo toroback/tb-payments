@@ -14,6 +14,8 @@ var mongoose = require('mongoose'),
  * @property {Boolean} active Flag que indica si la tarjeta está activa o no
  * @property {Date} [unregts] Timestamp de la fecha de desregistro de la tarjeta. Solo tarjetas desregistradas
  * @property {Date} [unregrespts] Timestamp de le fecha de la respuesta del desregistro. Solo tarjetas desregistradas
+ * @property {Object} originalResponse Respuesta original del registro
+ * @property {String} serviceProvider Servicio de pagos utilizado para el registro
  */ 
 var PaymentRegisterSchema = new Schema({  
   cardNumber : { type: String }, // Número de tarjeta. Los números de tajerjeta se almacenan guardando los 4 ultimos digitos completando con asteriscos el resto
@@ -26,7 +28,10 @@ var PaymentRegisterSchema = new Schema({
   active: { type: Boolean }, // flag que indica si la tarjeta está activa o no
 
   unregts : { type: Date }, //timestamp de la fecha de desregistro de la tarjeta
-  unregrespts: { type: Date } // timestamp de le fecha de la respuesta del desregistro
+  unregrespts: { type: Date }, // timestamp de le fecha de la respuesta del desregistro
+
+  originalResponse: { }, //Respuesta original del registro
+  serviceProvider: { type: String } //Proveedor del servicio de pagos
 });
 
 PaymentRegisterSchema.index({ reference: 1 });

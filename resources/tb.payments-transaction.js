@@ -18,8 +18,13 @@ const actionEnum = ["pay", "refund"];
  * @property {String} rPayReference Número de referencia del pago o devolución de la transaccion realizada
  * @property {Date} rPayTs Timestamp de la fecha en que se realiza la transaccion 
  * @property {Boolean} rApproved Flag que indica si la transacción fue aprobada
+ * @property {String} rApprovalCode Código de aprovación de la transacción
  * @property {String} rPaycode Código de respuesta del estado de la transacción 
+ * @property {String} rBankcode Código de respuesta de la transacción proporcionado por el banco
+ * @property {String} rText Texto de respuesta de la transacción
  * @property {Date} respts Timestamp de la fecha en que se recibe la respuesta de la transaccion
+ * @property {Object} originalResponse Respuesta original de la transaccion
+ * @property {String} serviceProvider Servicio de pagos utilizado para la transacción
  */ 
 var TransactionSchema = new Schema({  
   action: { type: String, enum:actionEnum, required: true}, //Acción que se realiza en la transaccion, indicando pago o devolución. Values(pay, refund)
@@ -33,8 +38,13 @@ var TransactionSchema = new Schema({
   rPayReference : { type: String }, //Número de referencia del pago o devolución de la transaccion realizada
   rPayTs: { type: Date }, // Timestamp de la fecha en que se realiza la transaccion 
   rApproved: { type: Boolean }, //Flag que indica si la transacción fue aprobada
+  rApprovalCode: { type: String }, //Código de aprovación de la transacción
   rPaycode: { type: String }, //Código de respuesta del estado de la transacción 
-  respts: {type: Date}  // Timestamp de la fecha en que se recibe la respuesta de la transaccion 
+  rBankcode: { type: String }, //Código de respuesta de la transacción proporcionado por el banco 
+  rText: { type: String }, //Texto de respuesta de la transacción
+  respts: { type: Date },  // Timestamp de la fecha en que se recibe la respuesta de la transaccion 
+  originalResponse: { }, //Respuesta original de la transaccion
+  serviceProvider: { type: String } //Servicio de pagos utilizado para la transacción
 });
 
 module.exports = TransactionSchema; 
