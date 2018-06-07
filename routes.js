@@ -101,6 +101,15 @@ function setupRoutes(App){
    * @bodyparam  {String} data.cardType  Tipo de tarjeta de crédito (EJ: MASTERCARD).
    * @bodyparam  {String} data.cardHolderName Nombre en la tarjeta de crédito.
    * @bodyparam  {String} data.cvv Código secreto que aparece en la tarjeta
+   * @bodyparam  {[String]} data.customerPostcode Código postal del dueño de la tarjeta
+   * @bodyparam  {[String]} data.customerCity Ciudad del dueño de la tarjeta
+   * @bodyparam  {[String]} data.customerRegion Región del dueño de la tarjeta
+   * @bodyparam  {[String]} data.customerCountry País del dueño de la tarjeta en formato ISO 3166-1-alpha-2
+   * @bodyparam  {[String]} data.customerAddress1 Dirección 1 del dueño de la tarjeta
+   * @bodyparam  {[String]} data.customerAddress2 Dirección 2 del dueño de la tarjeta
+   * @bodyparam  {[String]} data.customerPhone Teléfono del cliente asociado a la tarjeta en formato internacional
+   * @bodyparam  {[String]} data.description Descripción de la transacción
+   * @bodyparam  {[String]} data.ipAddress Dirección IP desde la que se realiza la transacción
    * @bodyparam  {Object} [options] Opciones extras relacionadas con el pago. La información dependerá del servicio a utilizar.
    * @bodyparam  {String} options.terminalType Terminal Type del servicio
    * @bodyparam  {String} options.transactionType Tipo de transacción del servicio

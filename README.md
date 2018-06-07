@@ -311,6 +311,15 @@ App.payments.forService(service)
 |data.cardType|String||Tipo de tarjeta de crédito (EJ: MASTERCARD).|
 |data.cardHolderName|String||Nombre en la tarjeta de crédito.|
 |data.cvv|String||Código secreto que aparece en la tarjeta|
+|data.customerPostcode|String|X|Código postal del dueño de la tarjeta|
+|data.customerCity|String|X|Ciudad del dueño de la tarjeta|
+|data.customerRegion|String|X|Región del dueño de la tarjeta|
+|data.customerCountry|String|X|País del dueño de la tarjeta en formato ISO 3166-1-alpha-2|
+|data.customerAddress1|String|X|Dirección 1 del dueño de la tarjeta|
+|data.customerAddress2|String|X|Dirección 2 del dueño de la tarjeta|
+|data.customerPhone|String|X|Teléfono del cliente asociado a la tarjeta en formato internacional|
+|data.description|String|X|Descripción de la transacción|
+|data.ipAddress|String|X|Dirección IP desde la que se realiza la transacción|
 |options|Object|X|Opciones extras relacionadas con el pago. La información dependerá del servicio a utilizar.|
 |options.terminalType|String||Terminal Type del servicio|
 |options.transactionType|String||Tipo de transacción del servicio|
@@ -375,6 +384,15 @@ POST: `https://a2server.a2system.net:1234/api/v1/srv/payments/pay?service=global
 |data.cardType|String||Tipo de tarjeta de crédito (EJ: MASTERCARD).|
 |data.cardHolderName|String||Nombre en la tarjeta de crédito.|
 |data.cvv|String||Código secreto que aparece en la tarjeta|
+|data.customerPostcode|String|X|Código postal del dueño de la tarjeta|
+|data.customerCity|String|X|Ciudad del dueño de la tarjeta|
+|data.customerRegion|String|X|Región del dueño de la tarjeta|
+|data.customerCountry|String|X|País del dueño de la tarjeta en formato ISO 3166-1-alpha-2|
+|data.customerAddress1|String|X|Dirección 1 del dueño de la tarjeta|
+|data.customerAddress2|String|X|Dirección 2 del dueño de la tarjeta|
+|data.customerPhone|String|X|Teléfono del cliente asociado a la tarjeta en formato internacional|
+|data.description|String|X|Descripción de la transacción|
+|data.ipAddress|String|X|Dirección IP desde la que se realiza la transacción|
 |options|Object|X|Opciones extras relacionadas con el pago. La información dependerá del servicio a utilizar.|
 |options.terminalType|String||Terminal Type del servicio|
 |options.transactionType|String||Tipo de transacción del servicio|
