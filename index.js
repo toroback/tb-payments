@@ -195,9 +195,9 @@ class Client {
   static setup(app){
     return new Promise((resolve,reject)=>{
       App = app;
-      log = App.log.child({module:'pay'});
+      log = App.log.child({module:'payments'});
 
-      log.debug("iniciando Módulo Pay");
+      log.debug("Setup: Payments");
 
       require("./routes")(app);
     

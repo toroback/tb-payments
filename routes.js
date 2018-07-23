@@ -13,7 +13,7 @@ let log;
  */
 function setupRoutes(App){
 
-  log = App.log.child({module:'payRoute'});
+  log = App.log.child({module:'paymentsRoute'});
 
   log.debug("Setup routes payments");
 
